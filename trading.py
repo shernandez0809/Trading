@@ -38,7 +38,7 @@ df['Sell']=where(df['cierre%']==vnd,-1,0)
 
 """columna estatus para venta y/o compra"""
 df['status']=where ((df['Buy'] ==1) & (df['Sell']==-1),2,0)
-df['status']=where ((df['Buy'] ==1) & (df['Sell']==0),1,0)
+df['status']=where ((df['Buy'] ==1) & (df['Sell']==0),1,df['status'])
 df['status']=where ((df['Buy'] ==0) & (df['Sell']==-1),-1,df['status'])
 
 
