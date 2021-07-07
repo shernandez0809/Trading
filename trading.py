@@ -30,11 +30,18 @@ df=pd.merge(df1, df2, how='inner',on=['Fecha','Fecha'])
 """ estrateia de compra"""
 df['apertura%']=(((df.Open/df.Apertura)-1)*100).round(0)
 df['apertura%'] =pd.Series(["{0:.2f}".format(val) for val in df['apertura%']], index = df.index)
-df['Buy']=where(((df['apertura%']==stop) | (df['apertura%']==cmp )),'compro',0)
+df['Buy']=where(((df['apertura%']==stop) | (df['apertura%']==cmp )),1,0)
 """ estrategia de  venta"""
 df['cierre%']=(((df.Open/df.Cierre)-1)*100).round(0)
 df['cierre%'] =pd.Series(["{0:.2f}".format(val) for val in df['cierre%']], index = df.index)
-df['Sell']=where(df['cierre%']==vnd,'vendo',0)
+df['Sell']=where(df['cierre%']==vnd,-1,0)
+
+"""columna estatus para venta y/o compra"""
+df['status']=where ((df['Buy'] ==1) & (df['Sell']==-1),2,0)
+df['status']=where ((df['Buy'] ==1) & (df['Sell']==0),1,0)
+df['status']=where ((df['Buy'] ==0) & (df['Sell']==-1),-1,df['status'])
+
+
 """ creacion de nuevo dataframe para conocer cuantas veces existe la estrategia compra y venta """
 df3=df[(df.Buy =='compro')]
 df4=df[(df.Sell =='vendo')]
